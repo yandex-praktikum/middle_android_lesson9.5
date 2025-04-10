@@ -30,6 +30,5 @@ class RecyclerViewItemClickAction(private val position: Int) : ViewAction {
             ?: throw IllegalStateException("No view holder at position $position")
         
         viewHolder.itemView.performClick()
-        //uiController.loopMainThreadUntilIdle()
     }
 } 

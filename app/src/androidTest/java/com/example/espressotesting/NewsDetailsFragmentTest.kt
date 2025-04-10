@@ -27,20 +27,16 @@ class NewsDetailsFragmentTest {
 
     @Before
     fun setup() {
-        // Access the NewsFragment
         activityRule.scenario.onActivity { activity ->
             newsFragment = activity.supportFragmentManager
                 .findFragmentById(R.id.fragmentContainer) as? NewsFragment
 
-            // Register the idling resource
             IdlingRegistry.getInstance().register(newsFragment?.getIdlingResource())
         }
         
-        // Wait for the RecyclerView to be displayed and click the first item
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
         
-        // Click on the first news item to navigate to details
         onView(withId(R.id.newsRecyclerView))
             .perform(RecyclerViewItemClickAction(0))
     }
@@ -52,18 +48,15 @@ class NewsDetailsFragmentTest {
 
     @Test
     fun testImageIsDisplayed() {
-        // Get the view ID from the custom view
         onView(withId(R.id.newsDetailsView))
             .check(matches(isDisplayed()))
         
-        // Directly check the ImageView in the custom view
         onView(withId(R.id.newsImageView))
             .check(matches(isDisplayed()))
     }
 
     @Test
     fun testTitleIsDisplayed() {
-        // The first news item title should be displayed
         onView(withId(R.id.newsTitleTextView))
             .check(matches(isDisplayed()))
             .check(matches(withText("Горячие новости")))
@@ -71,7 +64,6 @@ class NewsDetailsFragmentTest {
 
     @Test
     fun testDescriptionIsCollapsedInitially() {
-        // Check if the description is initially collapsed (maxLines = 5)
         onView(withId(R.id.newsDescriptionTextView))
             .check(matches(isDisplayed()))
             .check(matches(withMaxLines(5)))
@@ -79,40 +71,31 @@ class NewsDetailsFragmentTest {
 
     @Test
     fun testExpandCollapseButtonTogglesDescription() {
-        // Initially the description should be collapsed
         onView(withId(R.id.newsDescriptionTextView))
             .check(matches(withMaxLines(5)))
         
-        // Button should say "Read More"
         onView(withId(R.id.expandCollapseButton))
             .check(matches(withText("Read More")))
         
-        // Click the button to expand
         onView(withId(R.id.expandCollapseButton))
             .perform(click())
         
-        // Description should be expanded (maxLines = Integer.MAX_VALUE)
         onView(withId(R.id.newsDescriptionTextView))
             .check(matches(withMaxLines(Integer.MAX_VALUE)))
         
-        // Button should say "Show Less"
         onView(withId(R.id.expandCollapseButton))
             .check(matches(withText("Show Less")))
         
-        // Click again to collapse
         onView(withId(R.id.expandCollapseButton))
             .perform(click())
         
-        // Description should be collapsed again
         onView(withId(R.id.newsDescriptionTextView))
             .check(matches(withMaxLines(5)))
         
-        // Button should say "Read More" again
         onView(withId(R.id.expandCollapseButton))
             .check(matches(withText("Read More")))
     }
 
-    // Custom matcher to check the maxLines property of a TextView
     private fun withMaxLines(maxLines: Int) = object : TypeSafeMatcher<View>() {
         override fun describeTo(description: Description) {
             description.appendText("with maxLines: $maxLines")

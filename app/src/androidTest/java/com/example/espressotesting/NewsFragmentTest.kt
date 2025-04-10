@@ -33,7 +33,6 @@ class NewsFragmentTest {
     @Before
     fun setup() {
 
-        // Set up fragment and set idling resource
         activityRule.scenario.onActivity { activity ->
             newsFragment = activity.supportFragmentManager
                 .findFragmentById(R.id.fragmentContainer) as? NewsFragment
@@ -48,36 +47,29 @@ class NewsFragmentTest {
 
     @Test
     fun testRecyclerViewIsDisplayed() {
-        // Wait for the RecyclerView to be displayed
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
     }
 
     @Test
     fun testRecyclerViewHasItems() {
-        // Wait for the RecyclerView to be displayed
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
 
-        // Get adapter after RecyclerView is displayed
         activityRule.scenario.onActivity {
             adapter = newsFragment?.getAdapter()
         }
         
-        // Get items directly from the adapter
         val itemCount = adapter?.itemCount ?: 0
         
-        // Verify that we have items
         assertTrue("RecyclerView should not be empty", itemCount > 0)
     }
 
     @Test
     fun testFirstItemHasValidContent() {
-        // Wait for the RecyclerView to be displayed
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
 
-        // The test will wait for the async operation to complete
         onView(withId(R.id.newsRecyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
             .check(matches(atPosition(0, hasValidNewsItem())))
@@ -85,26 +77,21 @@ class NewsFragmentTest {
 
     @Test
     fun testLastItemHasValidContent() {
-        // Wait for the RecyclerView to be displayed
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
 
-        // Wait for data to load and get adapter
         activityRule.scenario.onActivity {
             adapter = newsFragment?.getAdapter()
         }
 
-        // Get the actual item count
         val itemCount = adapter?.itemCount ?: 0
         assertTrue("RecyclerView should have items", itemCount > 0)
 
-        // Scroll to the last item
         onView(withId(R.id.newsRecyclerView))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(itemCount - 1))
             .check(matches(atPosition(itemCount - 1, hasValidNewsItem())))
     }
 
-    // Custom matcher to verify position in RecyclerView
     private fun atPosition(position: Int, itemMatcher: Matcher<View>): Matcher<View> {
         return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
             override fun describeTo(description: Description) {
@@ -120,7 +107,6 @@ class NewsFragmentTest {
         }
     }
 
-    // Custom matcher to verify news item structure
     private fun hasValidNewsItem(): Matcher<View> {
         return object : BoundedMatcher<View, View>(View::class.java) {
             override fun describeTo(description: Description) {
@@ -128,11 +114,9 @@ class NewsFragmentTest {
             }
 
             override fun matchesSafely(view: View): Boolean {
-                // Find the TextViews
                 val titleView = view.findViewById<TextView>(R.id.newsTitleTextView)
                 val descriptionView = view.findViewById<TextView>(R.id.newsDescriptionTextView)
 
-                // Check that both views exist and have non-empty content
                 return titleView != null && descriptionView != null &&
                         !titleView.text.isNullOrBlank() &&
                         !descriptionView.text.isNullOrBlank()

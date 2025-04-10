@@ -2,7 +2,6 @@ package com.example.espressotesting
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -38,39 +37,28 @@ class FullNavigationFlowTest {
 
     @Test
     fun testCompleteNavigationFlow() {
-        // Step 1: Verify we're on the LoginActivity
         onView(withId(R.id.loginButton))
             .check(matches(isDisplayed()))
-            .check(matches(isNotEnabled()))  // Button should be disabled initially
+            .check(matches(isNotEnabled()))
 
-        // Step 2: Enter login credentials
         onView(withId(R.id.usernameEditText))
             .perform(typeText("testuser"))
 
         onView(withId(R.id.passwordEditText))
             .perform(typeText("password"))
 
-        // Step 3: Verify login button is now enabled and click it
         onView(withId(R.id.loginButton))
             .check(matches(isEnabled()))
             .perform(click())
 
-        // Step 5: Wait for transition to MainActivity using IdlingResource
-
-        // Step 6: Verify the NewsFragment's RecyclerView is displayed
-        // This verifies we've successfully transitioned to MainActivity
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
 
-        // Now find and register the IdlingResource from the current fragment
         getCurrentNewsFragment()
 
-        // Step 7: Click on the second news item
         onView(withId(R.id.newsRecyclerView))
-            .perform(RecyclerViewItemClickAction(1))  // Click on the second item (index 1)
+            .perform(RecyclerViewItemClickAction(1))
 
-        // Step 8: Verify we've navigated to NewsDetailsFragment with our custom view
-        // Verify the custom view is displayed
         onView(withId(R.id.newsDetailsView))
             .check(matches(isDisplayed()))
 
@@ -80,10 +68,8 @@ class FullNavigationFlowTest {
      * Helper method to find the current NewsFragment and register its IdlingResource
      */
     private fun getCurrentNewsFragment() {
-        // Get the current activity
         val currentActivity = getCurrentActivity()
 
-        // Find the NewsFragment from the current activity
         if (currentActivity is MainActivity) {
             InstrumentationRegistry.getInstrumentation().runOnMainSync {
                 newsFragment = currentActivity.supportFragmentManager

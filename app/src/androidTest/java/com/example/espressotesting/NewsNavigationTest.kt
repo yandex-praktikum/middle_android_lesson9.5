@@ -27,14 +27,12 @@ class NewsNavigationTest {
 
     @Before
     fun setup() {
-        // Access the NewsFragment and register its IdlingResource
         activityRule.scenario.onActivity { activity ->
             newsFragment = activity.supportFragmentManager
                 .findFragmentById(R.id.fragmentContainer) as? NewsFragment
             IdlingRegistry.getInstance().register(newsFragment?.getIdlingResource())
         }
 
-        // Wait for the RecyclerView to be displayed
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
     }
@@ -46,20 +44,16 @@ class NewsNavigationTest {
     
     @Test
     fun testNavigationToDetailsAndBackToNews() {
-        // Click on the first news item to navigate to details
         onView(withId(R.id.newsRecyclerView))
             .perform(
                 RecyclerViewItemClickAction(0)
             )
         
-        // Verify that we're on the details screen by checking for the custom view
         onView(withId(R.id.newsDetailsView))
             .check(matches(isDisplayed()))
         
-        // Press back to return to NewsFragment
         pressBack()
         
-        // Verify that we're back on the NewsFragment
         onView(withId(R.id.newsRecyclerView))
             .check(matches(isDisplayed()))
     }

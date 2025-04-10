@@ -25,38 +25,20 @@ class LoginActivitySetupTest {
 
     @Before
     fun setup() {
-        // Initialize test data before each test
         testUsername = "testUser123"
         testPassword = "testPass123"
-        
-        // You could also do other setup here like:
-        // - Clear shared preferences
-        // - Initialize test data
-        // - Set up mock objects
-    }
-
-    @After
-    fun teardown() {
-        // Clean up after each test
-        // This could include:
-        // - Clearing data
-        // - Closing resources
-        // - Resetting state
     }
 
     @Test
     fun testLoginFieldsWithTestData() {
-        // Type the username that was set up in @Before
         onView(withId(R.id.usernameEditText))
             .perform(typeText(testUsername))
             .check(matches(withText(testUsername)))
 
-        // Type the password that was set up in @Before
         onView(withId(R.id.passwordEditText))
             .perform(typeText(testPassword))
             .check(matches(withText(testPassword)))
 
-        // Verify both fields are displayed
         onView(withId(R.id.usernameEditText))
             .check(matches(isDisplayed()))
         onView(withId(R.id.passwordEditText))
@@ -65,7 +47,6 @@ class LoginActivitySetupTest {
 
     @Test
     fun testAnotherTestUsingSetupData() {
-        // This test also has access to testUsername and testPassword
         onView(withId(R.id.usernameEditText))
             .perform(typeText(testUsername))
             .check(matches(withText(testUsername)))
